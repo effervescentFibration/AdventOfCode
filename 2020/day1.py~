@@ -1,7 +1,0 @@
-
-def product_of_sum_to_2020(l):
-    d = {}
-    for i in l:
-        if (2020 - i) in d:
-            return (2020 - i) * (i)
-        d.add(i)
