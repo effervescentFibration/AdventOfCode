@@ -6,8 +6,7 @@ def contigSum(i, l):
     for first_i in range(len(l)):
         s = l[first_i]
         last_i = first_i + 1
-        while last_i < len(l):# and l[last_i] == l[last_i - 1] + 1:
-            #print(str(first_i) + "," + str(last_i))
+        while last_i < len(l):
             s += l[last_i]
             if s == i:
                 return [first_i, last_i]
@@ -15,42 +14,39 @@ def contigSum(i, l):
                 break
             last_i += 1
 
-def gauss(t):
-    return t * (t + 1) / 2
+import copy
+import re
+from collections import deque
 
-def check(i, d, s):
+def check(i, d):
     for k in range(len(d)):
         for l in range(k + 1, len(d)):
-            #print("k {} l {}".format(k, l))
             if d[k] + d[l] == i:
-                #print(d[k] + " + " + d[l] + " = " + i)
                 return True
     return False
 
 d = deque()
-s = set()
 a = []
+badValue = None
 
 with open("input") as f:
     for l in f:
-        try:
-            i = int(str(l[0:-1]))
-            a.append(i)
-        except Exception as e:
-            print(e)
-            while True:
-                continue
-            continue
+        i = int(str(l[0:-1])) # Exclude the last char, which is a linebreak
 
-input = 556543474 # part 1
+        if len(d) == 25:
+            if not check(i, d):
+                badValue = i
+                break # we have found the solution to part 1
+            d.popleft()
+        d.append(i)
+        a.append(i)
 
-g = contigSum(input, a)
-a0 = a[g[0]:(g[1]+1)]
-print("??? " + str(sum(a0) - input))
+# find the contiguous slice for part 1
+g = contigSum(badValue, a)
+# produce the slice indicated by the contiguous sum
+contigSlice = a[g[0]:(g[1]+1)]
 
-amin = min(a0)
-print(amin)
-amax = max(a0)
-print(amax)
+sliceMin = min(contigSlice)
+sliceMax = max(contigSlice)
 
-print(sum([amin, amax]))
+print(sum([sliceMin, sliceMax]))
